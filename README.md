@@ -14,6 +14,11 @@ To install the project, follow these steps:
 1. You must install the [Tesseract](https://github.com/UB-Mannheim/tesseract/wiki)
 2. Clone the repository.
 3. Run `pip install -r requirements.txt` to install the dependencies.
+4. Or you can install the dependencies using `pipenv`:
+    ```
+    pipenv shell
+    pipenv sync
+    ```
 
 ## Usage
 
