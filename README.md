@@ -22,8 +22,20 @@ To install the project, follow these steps:
 
 ## Usage
 
-To use the project, run the following command:
 
+1. Create a `.env` file and enter ***a path to tesseract*** the variable `TESSERACT_PATH`.
+
+**Example:**
+```python
+TESSERACT_PATH = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+```
+
+2. Run the `pipenv environment`
+```python
+pipenv shell
+```
+
+3. After with run:
 ```
  python.exe .\main.py -i .\tests\5.png
 ```

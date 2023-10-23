@@ -2,12 +2,13 @@
 # https://github.com/UB-Mannheim/tesseract/wiki
 # And you must have OpenCV installed
 
+import os
 import argparse
 import cv2
 import pytesseract
 
 # Set the path to tesseract.exe
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+pytesseract.pytesseract.tesseract_cmd = os.getenv('TESSERACT_PATH')
 
 
 class OCR:
@@ -21,7 +22,9 @@ class OCR:
         gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
         if blure:
             blurred = cv2.GaussianBlur(gray, (5, 5), 0)
-            self.preprocessed_image = cv2.adaptiveThreshold(blurred, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 11, 2)
+            self.preprocessed_image = cv2.adaptiveThreshold(blurred, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY,
+                                                            11, 2
+                                                            )
         else:
             self.preprocessed_image = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
 
@@ -44,6 +47,7 @@ class OCR:
         pdf = pytesseract.image_to_pdf_or_hocr(self.preprocessed_image, extension='pdf')
         with open('test.pdf', 'w+b') as f:
             f.write(pdf)  # pdf type is bytes by default
+
 
 def print_help_options():
     help_options = """
@@ -82,17 +86,24 @@ def print_help_options():
      """
     print(help_options)
 
+
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--image_path', '-i', required=True, type=str, dest='image_path', help='path to your image')
     parser.add_argument('--to-pdf', '-p', action='store_true', dest='to_pdf', help='Convert image to pdf')
     parser.add_argument('--window', '-w', action='store_true', dest='window', help='Print image to window')
     parser.add_argument('--language', '-l', action='store', default='eng', dest='lang', help='Specify language')
-    parser.add_argument('--get-languages', '-gl', action='store_true', dest='list_lang', help='List only available languages')
-    parser.add_argument('--blured', '-b', action='store_true', default=False, dest='blure', help='Blur for preprocessing image')
+    parser.add_argument('--get-languages', '-gl', action='store_true', dest='list_lang',
+                        help='List only available languages'
+                        )
+    parser.add_argument('--blured', '-b', action='store_true', default=False, dest='blure',
+                        help='Blur for preprocessing image'
+                        )
     parser.add_argument('--oem', '-o', action='store', default='3', dest='oem', help='Specify OCR Engine mode')
     parser.add_argument('--psm', '-psm', action='store', default='6', dest='psm', help='Specify PSM')
-    parser.add_argument('--print-help-options', '-pho', action='store_true', dest='print_help_options', help='Print help for --oem and --psm options')
+    parser.add_argument('--print-help-options', '-pho', action='store_true', dest='print_help_options',
+                        help='Print help for --oem and --psm options'
+                        )
     args = parser.parse_args()
     return args
 
